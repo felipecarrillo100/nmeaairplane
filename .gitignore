@@ -1,0 +1,53 @@
+# Build folders
+/build/
+/bin/
+/out/
+
+# Visual Studio
+.vs/
+*.vcxproj.user
+*.suo
+*.user
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+
+# CMake files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+CTestTestfile.cmake
+build/
+
+# vcpkg installed libraries and build
+/vcpkg_installed/
+/installed/
+/packages/
+/scripts/buildsystems/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Generated files
+*.obj
+*.exe
+*.pdb
+*.idb
+*.ipdb
+*.dll
+*.lib
+*.so
+*.dylib
+
+# Mac OS files
+.DS_Store
+
+# Others
+*.user
+*.ncb
+*.sdf
+*.opensdf
+*.cache
