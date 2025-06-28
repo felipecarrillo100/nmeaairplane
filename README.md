@@ -15,13 +15,30 @@ Ideal for testing GPS and NMEA-based systems.
 
 ---
 
+## ⚠️ MQTT/STOMP Compatibility
+
+Catalog Explorer communicates via the **STOMP** protocol and does **not** natively support MQTT.
+To bridge MQTT messages into STOMP (so they appear in Catalog Explorer), your broker must support both protocols **and translate between them**.
+
+### ✅ Recommended: Use ActiveMQ
+
+If you use **ActiveMQ**, you can enable both MQTT and STOMP connectors. ActiveMQ will automatically and transparently map MQTT topics to STOMP destinations.
+
+#### Example Mapping:
+- MQTT topic: `producers/cessna/data` to
+- STOMP topic: `/topic/producers.cessna.data`
+
+This bridging lets MQTT publishers and STOMP consumers (like Catalog Explorer) work together seamlessly.
+
+---
+
 ## Requirements
 
 - Windows 10 or later (or Linux)
 - Visual Studio 2022 (with C++ development workload) or GCC/Clang on Linux
 - [vcpkg](https://github.com/microsoft/vcpkg) package manager
 - CMake (version 3.10 or later)
-- MQTT broker (e.g., Mosquitto) running locally or remotely
+- MQTT broker (e.g., ActiveMQ, Mosquito) running locally or remotely
 
 ---
 
@@ -93,12 +110,12 @@ mqtt_hello.exe [broker_url] [username] [password] [base_topic]
 - **broker_url** (default: `tcp://localhost:1883`)
 - **username** (default: `admin`)
 - **password** (default: `admin`)
-- **base_topic** (default: `producers/hello/data`)
+- **base_topic** (default: `producers/cessna/data`)
 
 Example:
 
 ```bash
-mqtt_hello.exe tcp://localhost:1883 admin admin producers/plane/nmea
+mqtt_hello.exe tcp://localhost:1883 admin admin producers/cessna/data
 ```
 
 ---
