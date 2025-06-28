@@ -17,8 +17,8 @@ Ideal for testing GPS and NMEA-based systems.
 
 ## Requirements
 
-- Windows 10 or later
-- Visual Studio 2022 (with C++ development workload)
+- Windows 10 or later (or Linux)
+- Visual Studio 2022 (with C++ development workload) or GCC/Clang on Linux
 - [vcpkg](https://github.com/microsoft/vcpkg) package manager
 - CMake (version 3.10 or later)
 - MQTT broker (e.g., Mosquitto) running locally or remotely
@@ -30,7 +30,8 @@ Ideal for testing GPS and NMEA-based systems.
 The project uses the Eclipse Paho MQTT C++ client library, installed via vcpkg:
 
 ```bash
-vcpkg install paho-mqttpp3:x64-windows
+vcpkg install paho-mqttpp3:x64-windows  # Windows
+vcpkg install paho-mqttpp3               # Linux
 ```
 
 ---
@@ -47,7 +48,11 @@ cd PlaneSimulator
 2. Install dependencies with vcpkg (if not done already):
 
 ```bash
+# Windows
 vcpkg install paho-mqttpp3:x64-windows
+
+# Linux
+./vcpkg install paho-mqttpp3
 ```
 
 3. Create and enter a build directory:
@@ -60,7 +65,11 @@ cd build
 4. Configure the project with CMake, making sure to provide the path to your vcpkg toolchain file:
 
 ```bash
+# Windows example
 cmake .. -DCMAKE_TOOLCHAIN_FILE="C:/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows
+
+# Linux example
+cmake .. -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux
 ```
 
 5. Build the project:
@@ -71,7 +80,9 @@ cmake --build . --config Release
 
 ---
 
-## Run Instructions
+## Run Instructions (Windows & Linux)
+
+### Windows
 
 Run the executable with optional command line arguments:
 
@@ -88,6 +99,64 @@ Example:
 
 ```bash
 mqtt_hello.exe tcp://localhost:1883 admin admin producers/plane/nmea
+```
+
+---
+
+### Linux
+
+1. **Install dependencies**
+
+Make sure you have the following installed:
+
+- C++ compiler (e.g., `g++` or `clang++`)
+- CMake (version 3.10 or later)
+- OpenSSL development libraries
+- vcpkg
+
+For example, on Debian/Ubuntu:
+
+```bash
+sudo apt update
+sudo apt install build-essential cmake libssl-dev
+```
+
+2. **Install vcpkg**
+
+If you haven't installed vcpkg yet, clone and bootstrap it:
+
+```bash
+git clone https://github.com/microsoft/vcpkg.git
+cd vcpkg
+./bootstrap-vcpkg.sh
+```
+
+3. **Install dependencies with vcpkg**
+
+```bash
+./vcpkg install paho-mqttpp3
+```
+
+4. **Build the project**
+
+From the project root:
+
+```bash
+mkdir build && cd build
+cmake .. -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux
+cmake --build . --config Release
+```
+
+5. **Run the executable**
+
+```bash
+./mqtt_hello [broker_url] [username] [password] [base_topic]
+```
+
+Example:
+
+```bash
+./mqtt_hello tcp://localhost:1883 admin admin producers/plane/nmea
 ```
 
 ---
