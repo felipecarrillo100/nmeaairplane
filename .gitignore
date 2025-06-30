@@ -33,6 +33,7 @@ build/
 
 # Generate folders
 cmake-build-*/
+.idea
 
 # Generated files
 *.obj
