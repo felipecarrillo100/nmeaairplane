@@ -8,7 +8,7 @@
 #include <ctime>
 
 PlaneSimulator::PlaneSimulator()
-    : radiusMeters(5000.0),
+    : radiusMeters(10000.0),
       altitudeMeters(12000 * 0.3048), // feet to meters
       speedMetersPerSec(72.0),        // ~140 knots
       centerLat(40.7831),
