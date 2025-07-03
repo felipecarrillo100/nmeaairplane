@@ -7,13 +7,35 @@
 #include <sstream>
 #include <ctime>
 
+constexpr double PI = 3.14159265358979323846;
+
+// Manhattan
+constexpr double CenterLongitude = -73.9712;
+constexpr double CenterLatitude = 40.7831;
+
+// Paris
+// constexpr double CenterLongitude = 2.2943067050001695;
+//  constexpr double CenterLatitude = 48.85822780194177;
+
+// Sao Paolo
+// constexpr double CenterLatitude =-23.544613569973116;
+// constexpr double CenterLongitude = -46.66660718174367;
+
+// Sydney
+// constexpr double CenterLatitude = -33.85776741122166;
+// constexpr double CenterLongitude = 151.21549760187668;
+
+// Shanghai
+// constexpr double CenterLatitude = 31.240735926475473;
+// constexpr double CenterLongitude = 121.5004677369338;
+
 PlaneSimulator::PlaneSimulator()
     : radiusMeters(10000.0),
-      altitudeMeters(12000 * 0.3048), // feet to meters
-      speedMetersPerSec(72.0),        // ~140 knots
-      centerLat(40.7831),
-      centerLon(-73.9712),
-      angleRadians(0.0)
+    altitudeMeters(12000 * 0.3048), // feet to meters
+    speedMetersPerSec(72.0),        // ~140 knots
+    centerLat(CenterLatitude),
+    centerLon(CenterLongitude),
+    angleRadians(0.0)
 {
     latDegreeMeters = 111000.0;
     lonDegreeMeters = latDegreeMeters * std::cos(centerLat * PI / 180.0);
@@ -52,9 +74,11 @@ std::string PlaneSimulator::formatLatitude(double lat) {
     int degrees = static_cast<int>(lat);
     double minutes = (lat - degrees) * 60.0;
 
+    // Format as ddmm.mmmm - degrees always 2 digits, minutes fixed 4 decimals with leading zeros
     std::ostringstream ss;
     ss << std::setfill('0') << std::setw(2) << degrees
-       << std::fixed << std::setprecision(4) << minutes << "," << hemi;
+        << std::fixed << std::setprecision(4) << std::setw(7) << minutes  // width 7: 2 digits before '.' + '.' + 4 decimals
+        << "," << hemi;
     return ss.str();
 }
 
@@ -64,9 +88,11 @@ std::string PlaneSimulator::formatLongitude(double lon) {
     int degrees = static_cast<int>(lon);
     double minutes = (lon - degrees) * 60.0;
 
+    // Format as dddmm.mmmm - degrees always 3 digits, minutes fixed 4 decimals with leading zeros
     std::ostringstream ss;
     ss << std::setfill('0') << std::setw(3) << degrees
-       << std::fixed << std::setprecision(4) << minutes << "," << hemi;
+        << std::fixed << std::setprecision(4) << std::setw(7) << minutes
+        << "," << hemi;
     return ss.str();
 }
 
