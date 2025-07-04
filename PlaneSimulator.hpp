@@ -2,14 +2,7 @@
 #define PLANESIMULATOR_HPP
 
 #include <string>
-
-struct PlanePosition {
-    double latitude;   // degrees
-    double longitude;  // degrees
-    double altitude;   // meters
-    double speed;      // meters per second
-    double heading;    // degrees from North [0..360)
-};
+#include "PlanePosition.hpp"
 
 class PlaneSimulator {
 public:
