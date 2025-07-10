@@ -1,14 +1,14 @@
-# PlaneSimulator
+# nmeaairplane 
 
 A simple C++ simulator that generates airplane position tracks flying in a circle above Manhattan, NYC.  
 It produces NMEA 0183 sentences every second with realistic position, altitude, speed, and heading data.  
-Ideal for testing GPS and NMEA-based systems.
+Ideal for testing GPS and NMEA-based receivers.
 
 ---
 
 ## Features
 
-- Simulates a Cessna 172 flying a 5 km radius circular path at 12,000 feet altitude.
+- Simulates a Cessna 172 flying a 10 km radius circular path at 12,000 feet altitude.
 - Outputs valid NMEA 0183 GGA and RMC sentences every second.
 - Uses realistic speed, heading, and position calculations.
 - Sends generated NMEA messages via MQTT.
@@ -25,20 +25,19 @@ To bridge MQTT messages into STOMP (so they appear in Catalog Explorer), your br
 If you use **ActiveMQ**, you can enable both MQTT and STOMP connectors. ActiveMQ will automatically and transparently map MQTT topics to STOMP destinations.
 
 #### Example Mapping:
-- MQTT topic: `producers/cessna/data` to
+- MQTT topic: `producers/cessna/data` is mapped to
 - STOMP topic: `/topic/producers.cessna.data`
 
 This bridging lets MQTT publishers and STOMP consumers (like Catalog Explorer) work together seamlessly.
 
 ---
 
-## Requirements
+## Requirements to compile
 
 - Windows 10 or later (or Linux)
 - Visual Studio 2022 (with C++ development workload) or GCC/Clang on Linux
 - [vcpkg](https://github.com/microsoft/vcpkg) package manager
 - CMake (version 3.10 or later)
-- MQTT broker (e.g., ActiveMQ, Mosquito) running locally or remotely
 
 ---
 
@@ -58,11 +57,12 @@ vcpkg install paho-mqttpp3               # Linux
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/PlaneSimulator.git
-cd PlaneSimulator
+git clone https://github.com/felipecarrillo100/nmeaairplane.git
+cd nmeaairplane
 ```
 
 2. Install dependencies with vcpkg (if not done already):
+> **Note:** Make sure [vcpkg](https://github.com/microsoft/vcpkg#quick-start) is installed on your system before proceeding. You can install `vcpkg` in any folder of your choice, for instance `C:\cpptools\vcpkg`
 
 ```bash
 # Windows
@@ -81,12 +81,16 @@ cd build
 
 4. Configure the project with CMake, making sure to provide the path to your vcpkg toolchain file:
 
+> **Note:** Verify where `vcpkg` is installed in your system and adjust the path accordingly
+
 ```bash
 # Windows example
 cmake .. -DCMAKE_TOOLCHAIN_FILE="C:/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows
+```
 
+```bash
 # Linux example
-cmake .. -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux
+cmake .. -DCMAKE_TOOLCHAIN_FILE=/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux
 ```
 
 5. Build the project:
@@ -94,6 +98,7 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPK
 ```bash
 cmake --build . --config Release
 ```
+> **Note:** When successful, you will have now a folder called `Release` and your executable will be located inside together with any dependencies (i.e. dll files).
 
 ---
 
@@ -104,7 +109,7 @@ cmake --build . --config Release
 Run the executable with optional command line arguments:
 
 ```bash
-mqtt_hello.exe [broker_url] [username] [password] [base_topic]
+nmeaairplane.exe [broker_url] [username] [password] [base_topic]
 ```
 
 - **broker_url** (default: `tcp://localhost:1883`)
@@ -115,7 +120,7 @@ mqtt_hello.exe [broker_url] [username] [password] [base_topic]
 Example:
 
 ```bash
-mqtt_hello.exe tcp://localhost:1883 admin admin producers/cessna/data
+nmeaairplane.exe tcp://localhost:1883 admin admin producers/cessna/data
 ```
 
 ---
@@ -167,13 +172,13 @@ cmake --build . --config Release
 5. **Run the executable**
 
 ```bash
-./mqtt_hello [broker_url] [username] [password] [base_topic]
+./nmeaairplane [broker_url] [username] [password] [base_topic]
 ```
 
 Example:
 
 ```bash
-./mqtt_hello tcp://localhost:1883 admin admin producers/plane/nmea
+./nmeaairplane tcp://localhost:1883 admin admin producers/plane/nmea
 ```
 
 ---
