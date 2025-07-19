@@ -60,12 +60,14 @@ int main(int argc, char* argv[]) {
                 std::string topic = baseTopic + "/plane" + std::to_string(i + 1);
                 std::string id = simulator.getID();
 
-                std::string messageRMC = "[" + id + "] " + msgs.gprmc;
+                // Conditionally prepend id only if more than one plane
+                std::string prefixId = (counter == 1) ? "" : "[" + id + "] ";
+                std::string messageRMC = prefixId + msgs.gprmc;
                 auto pubmsg1 = mqtt::make_message(topic, messageRMC);
                 pubmsg1->set_qos(1);
                 client.publish(pubmsg1);
 
-                std::string messageGGA = "[" + id + "] " + msgs.gpgga;
+                std::string messageGGA = prefixId + msgs.gpgga;
                 auto pubmsg2 = mqtt::make_message(topic, messageGGA);
                 pubmsg2->set_qos(1);
                 client.publish(pubmsg2);
