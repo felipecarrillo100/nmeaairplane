@@ -8,11 +8,27 @@ Ideal for testing GPS and NMEA-based receivers.
 
 ## Features
 
-- Simulates a Cessna 172 flying a 10 km radius circular path at 12,000 feet altitude.
+- Simulates a (count) planes Cessna 172 flying a 10 km radius circular path at 12,000 feet altitude.
 - Outputs valid NMEA 0183 GGA and RMC sentences every second.
 - Uses realistic speed, heading, and position calculations.
 - Sends generated NMEA messages via MQTT.
+---
 
+### Application Command Line  Options:
+
+| Option         | Description                     | Default                   |
+|----------------|---------------------------------|---------------------------|
+| `-b, --broker` | MQTT broker URL                | `tcp://localhost:1883`    |
+| `-u, --username` | MQTT username                 | `admin`                   |
+| `-p, --password` | MQTT password                 | `admin`                   |
+| `-t, --topic`  | Base MQTT topic                | `producers/cessna/data`   |
+| `-c, --count`  | Number of planes to simulate   | `1`                       |
+
+### Use
+
+```bash
+./nmeaairplane --broker tcp://mybroker:1883 --username user --password pass --topic producers/planes/nmea --count 5
+````
 ---
 
 ## ⚠️ MQTT/STOMP Compatibility
@@ -50,6 +66,11 @@ vcpkg install paho-mqttpp3:x64-windows  # Windows
 vcpkg install paho-mqttpp3               # Linux
 ```
 
+For CLI parsing we use cli11
+```bash
+vcpkg install cli11
+```
+
 ---
 
 ## Build Instructions
@@ -67,9 +88,13 @@ cd nmeaairplane
 ```bash
 # Windows
 vcpkg install paho-mqttpp3:x64-windows
+vcpkg install cli11
+
 
 # Linux
 ./vcpkg install paho-mqttpp3
+./vcpkg install cli11
+
 ```
 
 3. Create and enter a build directory:
