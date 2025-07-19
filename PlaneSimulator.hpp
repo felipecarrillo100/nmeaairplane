@@ -6,39 +6,36 @@
 
 class PlaneSimulator {
 public:
-    PlaneSimulator();
-
     struct NMEAMessages {
         std::string gprmc;
         std::string gpgga;
     };
 
+    PlaneSimulator(
+        const std::string& id = "plane1",
+        double radiusMeters = 10000.0,
+        double altitudeMeters = 12000 * 0.3048,
+        double speedMetersPerSec = 72.0,
+        double angleRadians = 0.0,
+        double centerLat = 40.7831,
+        double centerLon = -73.9712
+    );
+
     NMEAMessages getNextNMEAMessages();
+    const std::string& getID() const;
 
 private:
-    PlanePosition calculatePosition(double angleRad);
+    struct PlanePosition calculatePosition(double angleRad);
 
-    std::string formatLatitude(double lat);
-    std::string formatLongitude(double lon);
-    std::string formatNMEATime();
-    std::string formatNMEADate();
-    std::string calculateChecksum(const std::string& sentence);
-    std::string generateGPRMC(const PlanePosition& pos);
-    std::string generateGPGGA(const PlanePosition& pos);
-
-private:
-    const double PI = 3.14159265358979323846;
-
+    std::string id;
     double radiusMeters;
     double altitudeMeters;
     double speedMetersPerSec;
+    double angleRadians;
     double centerLat;
     double centerLon;
-
-    double angleRadians;
-
-    double latDegreeMeters;  // meters per degree latitude
-    double lonDegreeMeters;  // meters per degree longitude (varies by latitude)
+    double latDegreeMeters;
+    double lonDegreeMeters;
 };
 
 #endif // PLANESIMULATOR_HPP
