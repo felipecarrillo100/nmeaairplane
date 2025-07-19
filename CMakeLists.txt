@@ -3,12 +3,15 @@ project(nmeaairplane)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# Use the Paho MQTT C++ package from vcpkg
+# Find Paho MQTT C++ from vcpkg
 find_package(PahoMqttCpp CONFIG REQUIRED)
+
+# Find CLI11 from vcpkg
+find_package(CLI11 CONFIG REQUIRED)
 
 add_executable(nmeaairplane main.cpp PlaneSimulator.cpp NMEAGenerator.cpp)
 
-# ✅ Use only the shared variant target provided by vcpkg
 target_link_libraries(nmeaairplane PRIVATE
-    PahoMqttCpp::paho-mqttpp3-shared
-)
+        PahoMqttCpp::paho-mqttpp3-shared
+        CLI11::CLI11
+        )
