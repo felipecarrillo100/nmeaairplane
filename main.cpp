@@ -9,16 +9,31 @@
 
 constexpr double PI = 3.14159265358979323846;
 
+
+// Clear Previous tracks
 void sendClearMessage(mqtt::client& client, const std::string& topic) {
     std::string controlTopic = topic + "/control";
 
-    // Correct JSON payload with "action": "clear"
+    // Correct JSON payload with "action": "CLEAR"
     std::string jsonClear = R"({"action":"CLEAR"})";
 
     auto clearMsg = mqtt::make_message(controlTopic, jsonClear);
     clearMsg->set_qos(1);
     client.publish(clearMsg);
     std::cout << "Sent clear JSON message to: " << controlTopic << std::endl;
+}
+
+// Request loading existing tracks from url
+void sendLoadMessage(mqtt::client& client, const std::string& topic) {
+    std::string controlTopic = topic + "/control";
+
+    // Correct JSON payload with "action": "LOAD"
+    std::string jsonClear = R"({"action":"LOAD","context":{"url":"https://raw.githubusercontent.com/felipecarrillo100/geojsonrepo/refs/heads/master/cities.json"}})";
+
+    auto clearMsg = mqtt::make_message(controlTopic, jsonClear);
+    clearMsg->set_qos(1);
+    client.publish(clearMsg);
+    std::cout << "Sent load JSON message to: " << controlTopic << std::endl;
 }
 
 int main(int argc, char* argv[]) {
@@ -66,6 +81,7 @@ int main(int argc, char* argv[]) {
         }
 
         sendClearMessage(client, topic);
+        // sendLoadMessage(client, topic);
 
         while (true) {
             for (int i = 0; i < counter; ++i) {
