@@ -9,11 +9,24 @@
 
 constexpr double PI = 3.14159265358979323846;
 
+void sendClearMessage(mqtt::client& client, const std::string& topic) {
+    std::string controlTopic = topic + "/control";
+
+    // Correct JSON payload with "action": "clear"
+    std::string jsonClear = R"({"action":"CLEAR"})";
+
+    auto clearMsg = mqtt::make_message(controlTopic, jsonClear);
+    clearMsg->set_qos(1);
+    client.publish(clearMsg);
+    std::cout << "Sent clear JSON message to: " << controlTopic << std::endl;
+}
+
 int main(int argc, char* argv[]) {
     std::string brokerUrl = "tcp://localhost:1883";
     std::string username = "admin";
     std::string password = "admin";
-    std::string baseTopic = "producers/cessna/data";
+    std::string topic = "producers/cessna";
+    std::string dataTopic = topic + "/data";
     int counter = 1; // number of planes to simulate
 
     CLI::App app{"NMEA Airplane Simulator"};
@@ -21,7 +34,7 @@ int main(int argc, char* argv[]) {
     app.add_option("-b,--broker", brokerUrl, "MQTT broker URL")->default_val(brokerUrl);
     app.add_option("-u,--username", username, "MQTT username")->default_val(username);
     app.add_option("-p,--password", password, "MQTT password")->default_val(password);
-    app.add_option("-t,--topic", baseTopic, "Base MQTT topic")->default_val(baseTopic);
+    app.add_option("-t,--topic", dataTopic, "Base MQTT topic")->default_val(dataTopic);
     app.add_option("-c,--count", counter, "Number of planes to simulate")->default_val("1");
 
     try {
@@ -52,12 +65,14 @@ int main(int argc, char* argv[]) {
             simulators.emplace_back("plane" + std::to_string(i + 1), 10000.0, 12000 * 0.3048, 72.0, angleRad);
         }
 
+        sendClearMessage(client, topic);
+
         while (true) {
             for (int i = 0; i < counter; ++i) {
                 auto& simulator = simulators[i];
                 PlaneSimulator::NMEAMessages msgs = simulator.getNextNMEAMessages();
 
-                std::string topic = baseTopic + "/plane" + std::to_string(i + 1);
+                std::string topic = dataTopic + "/plane" + std::to_string(i + 1);
                 std::string id = simulator.getID();
 
                 // Conditionally prepend id only if more than one plane
